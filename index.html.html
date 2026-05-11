@@ -1,0 +1,863 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — Luciano</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0a0a0f;
+  --surface: #111118;
+  --surface2: #18181f;
+  --surface3: #1e1e28;
+  --border: rgba(255,255,255,0.07);
+  --border2: rgba(255,255,255,0.12);
+  --text: #f0f0f5;
+  --muted: #7a7a90;
+  --muted2: #55556a;
+
+  --purple: #7c6ff7;
+  --purple-dim: rgba(124,111,247,0.12);
+  --purple-glow: rgba(124,111,247,0.25);
+  --coral: #f0694a;
+  --coral-dim: rgba(240,105,74,0.12);
+  --teal: #2dd4a0;
+  --teal-dim: rgba(45,212,160,0.12);
+  --amber: #f5b841;
+  --amber-dim: rgba(245,184,65,0.12);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── HEADER ── */
+.header {
+  padding: 2.5rem 2.5rem 0;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+.header-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+}
+.logo-area h1 {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  color: var(--text);
+}
+.logo-area p {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.meta-pills {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.pill {
+  font-size: 0.72rem;
+  font-weight: 500;
+  padding: 4px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  background: var(--surface2);
+  letter-spacing: 0.03em;
+}
+.pill.alert {
+  border-color: var(--coral);
+  color: var(--coral);
+  background: var(--coral-dim);
+}
+
+/* ── SYNOPSIS CARDS ── */
+.syn-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-bottom: 2rem;
+}
+@media (max-width: 800px) { .syn-grid { grid-template-columns: repeat(2,1fr); } }
+@media (max-width: 480px) { .syn-grid { grid-template-columns: 1fr; } }
+
+.syn-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1.25rem;
+  position: relative;
+  overflow: hidden;
+  transition: border-color .2s, transform .2s;
+}
+.syn-card:hover { transform: translateY(-2px); }
+.syn-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 2px;
+  border-radius: 14px 14px 0 0;
+}
+.syn-card.p { border-color: rgba(124,111,247,0.3); }
+.syn-card.p::before { background: var(--purple); }
+.syn-card.r { border-color: rgba(240,105,74,0.3); }
+.syn-card.r::before { background: var(--coral); }
+.syn-card.t { border-color: rgba(45,212,160,0.3); }
+.syn-card.t::before { background: var(--teal); }
+.syn-card.f { border-color: rgba(245,184,65,0.3); }
+.syn-card.f::before { background: var(--amber); }
+
+.syn-label {
+  font-size: 0.68rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  margin-bottom: 6px;
+}
+.syn-kw {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+.syn-card.p .syn-kw { color: var(--purple); }
+.syn-card.r .syn-kw { color: var(--coral); }
+.syn-card.t .syn-kw { color: var(--teal); }
+.syn-card.f .syn-kw { color: var(--amber); }
+.syn-desc { font-size: 0.78rem; color: var(--muted); line-height: 1.6; }
+
+/* ── ALERT BOX ── */
+.alert-box {
+  background: rgba(240,105,74,0.08);
+  border: 1px solid rgba(240,105,74,0.25);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  font-size: 0.8rem;
+  color: rgba(240,105,74,0.9);
+  line-height: 1.65;
+  margin-bottom: 2rem;
+}
+.alert-box b { font-weight: 500; color: var(--coral); }
+
+/* ── TABS ── */
+.tabs-bar {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin-bottom: 1.75rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 6px;
+}
+.tab-btn {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 7px 16px;
+  border-radius: 8px;
+  border: none;
+  background: transparent;
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .18s;
+  white-space: nowrap;
+}
+.tab-btn:hover { color: var(--text); background: var(--surface2); }
+.tab-btn.on { background: var(--surface3); color: var(--text); border: 1px solid var(--border2); }
+
+/* ── PLAN SECTIONS ── */
+.main { padding: 0 2.5rem 3rem; max-width: 1200px; margin: 0 auto; }
+.plan-sec { display: none; }
+.plan-sec.on { display: block; }
+
+.plan-head { margin-bottom: 1.25rem; }
+.plan-badge {
+  display: inline-block;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 4px 12px;
+  border-radius: 999px;
+  margin-bottom: 10px;
+}
+.b1 { background: var(--purple-dim); color: var(--purple); border: 1px solid rgba(124,111,247,0.3); }
+.b2 { background: var(--teal-dim); color: var(--teal); border: 1px solid rgba(45,212,160,0.3); }
+.b3 { background: var(--coral-dim); color: var(--coral); border: 1px solid rgba(240,105,74,0.3); }
+.b4 { background: var(--amber-dim); color: var(--amber); border: 1px solid rgba(245,184,65,0.3); }
+
+.plan-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 3px;
+}
+.plan-sub { font-size: 0.8rem; color: var(--muted); }
+
+.ctx-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+  line-height: 1.65;
+  margin-bottom: 1.5rem;
+}
+.ctx-box b { color: var(--text); font-weight: 500; }
+
+/* ── ROADMAP ── */
+.roadmap {
+  display: grid;
+  gap: 10px;
+  margin-bottom: 1.5rem;
+}
+.rm5 { grid-template-columns: repeat(5, 1fr); }
+.rm4 { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 900px) { .rm5, .rm4 { grid-template-columns: repeat(3,1fr); } }
+@media (max-width: 600px) { .rm5, .rm4 { grid-template-columns: repeat(2,1fr); } }
+
+.col {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 1rem;
+  transition: border-color .2s;
+}
+.col:hover { border-color: var(--border2); }
+
+.col-head {
+  border-radius: 8px;
+  padding: 6px 10px;
+  margin-bottom: 0.75rem;
+  text-align: center;
+}
+.col-num {
+  font-family: 'Syne', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 800;
+  display: block;
+  line-height: 1;
+  margin-bottom: 2px;
+}
+.col-name {
+  font-size: 0.65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.c1 .col-head { background: rgba(124,111,247,0.1); }
+.c1 .col-num, .c1 .col-name { color: var(--purple); }
+.c2 .col-head { background: rgba(45,212,160,0.1); }
+.c2 .col-num, .c2 .col-name { color: var(--teal); }
+.c3 .col-head { background: rgba(240,105,74,0.1); }
+.c3 .col-num, .c3 .col-name { color: var(--coral); }
+.c4 .col-head { background: rgba(245,184,65,0.1); }
+.c4 .col-num, .c4 .col-name { color: var(--amber); }
+
+.col-date {
+  font-size: 0.68rem;
+  color: var(--muted2);
+  margin-bottom: 0.6rem;
+  display: block;
+}
+
+.it {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  font-size: 0.75rem;
+  color: var(--muted);
+  line-height: 1.5;
+  padding: 3px 0;
+}
+.it-dot {
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+.c1 .it-dot { background: var(--purple); }
+.c2 .it-dot { background: var(--teal); }
+.c3 .it-dot { background: var(--coral); }
+.c4 .it-dot { background: var(--amber); }
+
+/* ── DIVIDER ── */
+.dv { height: 1px; background: var(--border); margin: 1.25rem 0; }
+
+/* ── TWO-COL EXTRAS ── */
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 1.25rem; }
+@media (max-width: 600px) { .two { grid-template-columns: 1fr; } }
+
+.mini-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+.mini-title {
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 0.6rem;
+}
+
+/* ── SCENARIOS ── */
+.scn { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-top: 0.75rem; }
+@media (max-width: 600px) { .scn { grid-template-columns: 1fr; } }
+
+.sn {
+  border-radius: 12px;
+  padding: 0.9rem;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  border: 1px solid transparent;
+}
+.snt {
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  margin-bottom: 6px;
+}
+.sn.op { background: rgba(45,212,160,0.07); border-color: rgba(45,212,160,0.2); }
+.sn.op .snt { color: var(--teal); }
+.sn.op p { color: rgba(45,212,160,0.75); }
+.sn.re { background: var(--surface); border-color: var(--border); }
+.sn.re .snt { color: var(--text); }
+.sn.re p { color: var(--muted); }
+.sn.pe { background: rgba(240,105,74,0.07); border-color: rgba(240,105,74,0.2); }
+.sn.pe .snt { color: var(--coral); }
+.sn.pe p { color: rgba(240,105,74,0.75); }
+
+/* ── COPY AREA ── */
+.copy-section { margin-top: 1.5rem; }
+.copy-btn {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 500;
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border2);
+  background: var(--surface2);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all .18s;
+  margin-bottom: 0.75rem;
+}
+.copy-btn:hover { background: var(--surface3); color: var(--text); }
+.copy-btn svg { width: 14px; height: 14px; stroke: currentColor; fill: none; stroke-width: 2; }
+
+.copy-area {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  font-family: 'DM Sans', monospace;
+  font-size: 0.73rem;
+  line-height: 1.75;
+  color: var(--muted);
+  white-space: pre-wrap;
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+/* ── EDITABILITY ── */
+[contenteditable="true"] {
+  outline: none;
+  border-radius: 4px;
+  transition: background .15s;
+}
+[contenteditable="true"]:focus {
+  background: rgba(124,111,247,0.08);
+  outline: 1px dashed rgba(124,111,247,0.4);
+}
+.edit-hint {
+  font-size: 0.68rem;
+  color: var(--muted2);
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.edit-hint svg { width: 12px; height: 12px; stroke: currentColor; fill: none; stroke-width: 2; opacity: .6; }
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: var(--surface3); border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="logo-area">
+      <h1>Dashboard — Luciano</h1>
+      <p>Documento maestro · Incubadora de Emprendedores 2026</p>
+    </div>
+    <div class="meta-pills">
+      <span class="pill">19 años</span>
+      <span class="pill">Córdoba, Argentina</span>
+      <span class="pill">Stickers DTF/UV</span>
+      <span class="pill alert">⚡ 3 de julio 2026</span>
+    </div>
+  </div>
+
+  <!-- SÍNTESIS -->
+  <div class="syn-grid">
+    <div class="syn-card p">
+      <div class="syn-label">1 · Propósito</div>
+      <div class="syn-kw" contenteditable="true">Desbloquear</div>
+      <div class="syn-desc" contenteditable="true">Ayudo a personas que no se resignaron a la vida que les tocó a desbloquear su potencial. Lo hago desde la creatividad, el humor, la enseñanza y la estrategia. Lo prometí a los 16 leyendo Padre Rico, Padre Pobre.</div>
+    </div>
+    <div class="syn-card r">
+      <div class="syn-label">2 · Restricción principal</div>
+      <div class="syn-kw" contenteditable="true">Audacia</div>
+      <div class="syn-desc" contenteditable="true">No me falta conocimiento. Me falta animarme a exponerme imperfecto, vender sin vergüenza y sostener mi camino aunque otros no lo entiendan. El miedo al juicio externo es mi freno real.</div>
+    </div>
+    <div class="syn-card t">
+      <div class="syn-label">3 · Transformación</div>
+      <div class="syn-kw" contenteditable="true">Hacedor</div>
+      <div class="syn-desc" contenteditable="true">Debo convertirme en alguien que actúa aunque tenga miedo. Que se muestra imperfecto. Que decepciona la imagen vieja para construir la vida que realmente quiere. Ya lo elegí. Ahora hay que sostenerlo.</div>
+    </div>
+    <div class="syn-card f">
+      <div class="syn-label">4 · Foco actual</div>
+      <div class="syn-kw" contenteditable="true">Validar</div>
+      <div class="syn-desc" contenteditable="true">Hacer crecer el negocio de stickers DTF/UV antes del 3 de julio. Meta crítica: 250-300 USD propios para reinvertir en ads, Claude Code y Hostinger. El negocio es el laboratorio, no el destino.</div>
+    </div>
+  </div>
+
+  <div class="alert-box">
+    <b>Situación real — mayo 2026:</b> 19 años, solo en Córdoba con tu hermana Cami. Tus viejos pagan ~2500 USD/mes entre el préstamo a España y tu manutención. No saben que dejaste la facultad. La fecha límite real es el <b>3 de julio</b> — necesitás resultados o la conversación ocurre sin argumento. Mostrá resultados antes de que lo descubran solos.
+  </div>
+
+  <!-- TABS -->
+  <div class="tabs-bar">
+    <button class="tab-btn on" onclick="go('p1',0)">Síntesis IA</button>
+    <button class="tab-btn" onclick="go('p2',1)">Plan 1 — Ser (1 año)</button>
+    <button class="tab-btn" onclick="go('p3',2)">Plan 2 — Ser (5 años)</button>
+    <button class="tab-btn" onclick="go('p4',3)">Plan 3 — Negocio (1 año)</button>
+    <button class="tab-btn" onclick="go('p5',4)">Plan 4 — Negocio (5 años)</button>
+  </div>
+</div>
+
+<div class="main">
+
+  <p class="edit-hint">
+    <svg viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+    Hacé clic en cualquier texto para editarlo directamente. Los cambios se guardan en el archivo.
+  </p>
+
+  <!-- ── PLAN 1: SÍNTESIS PARA IA ── -->
+  <div id="p1" class="plan-sec on">
+    <div class="plan-head">
+      <span class="plan-badge b1">Contexto listo para copiar</span>
+      <div class="plan-title">Síntesis para otros chats de IA</div>
+      <div class="plan-sub">Copiá este bloque y pegalo al inicio de cualquier conversación nueva con una IA.</div>
+    </div>
+    <div class="copy-section">
+      <button class="copy-btn" onclick="copiar()">
+        <svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+        Copiar síntesis
+      </button>
+      <div class="copy-area" id="cptxt">## CONTEXTO PERSONAL — Luciano (19 años, Córdoba, Argentina)
+
+HISTORIA: A los 16 leí Padre Rico, Padre Pobre y me prometí que no iba a vivir una vida mediocre. Salí del colegio a los 17, entré a Ingeniería en Sistemas a los 18. Aprendí métodos de estudio, hice amigos inteligentes, aprobé todo. Pero en el fondo sabía que no avanzaba hacia la vida que quería. En marzo 2026 empecé una incubadora de emprendedores que cambió mi visión. El 15 de marzo dejé la facultad para enfocarme en emprender.
+
+SITUACIÓN ACTUAL: Vivo en Córdoba con mi hermana Cami. Mis viejos viven en Jujuy y me sostienen económicamente (~500 USD/mes para vivir + pagan ~2000 USD/mes de préstamo del depto). No saben que dejé la facultad. Mi fecha crítica es el 3 de julio: necesito mostrar resultados o la conversación ocurre sin argumento.
+
+NEGOCIO: Venta de stickers DTF UV y DTF textil vía contenido en redes + marca personal. Mi papá es el proveedor a precio de costo. Demanda validada: 2 ventas a desconocidos. Problema: armado de planchas es tedioso. Próximo paso: 300 USD para reinvertir en ads + Claude Code + Hostinger para landing pages testeadas.
+
+PROPÓSITO: Ayudar a personas que no se resignaron a desbloquear su potencial. Desde la creatividad, el humor, la enseñanza y la estrategia. El negocio de stickers es el laboratorio, no el destino.
+
+RESTRICCIÓN PRINCIPAL: Falta de audacia para exponerme, actuar imperfecto y sostener mi camino frente al miedo al juicio externo y a la desaprobación familiar.
+
+TRANSFORMACIÓN NECESARIA: Convertirme en alguien que actúa aunque tenga miedo. Que vende sin vergüenza. Que decepciona expectativas ajenas para construir la vida real.
+
+CREENCIAS A REEMPLAZAR:
+— "Tengo que ser perfecto para mostrarme" → La acción imperfecta construye confianza real
+— "Vender me hace menos" → Vender es servir a quien lo necesita
+— "Todavía no merezco mostrarme" → Mostrarme imperfecto ES el proceso
+
+TIEMPO DISPONIBLE: 5-8h/día. Meta: 3h estudio + 5h implementación directa.</div>
+    </div>
+  </div>
+
+  <!-- ── PLAN 2: SER 1 AÑO ── -->
+  <div id="p2" class="plan-sec">
+    <div class="plan-head">
+      <span class="plan-badge b1">Objetivo 80/20 — Mayo 2026 → Mayo 2027</span>
+      <div class="plan-title">Plan 1 — 1 año para VIVIR mi propósito</div>
+      <div class="plan-sub" contenteditable="true">Crecimiento personal, hábitos, identidad. Del Luciano que se prometió algo a los 16 al Luciano que empieza a cumplirlo.</div>
+    </div>
+    <div class="ctx-box" contenteditable="true">
+      <b>Punto de partida real:</b> Eras el chico inteligente del que todos esperaban cosas grandes. Pero cuando te ibas a dormir sabías que no era verdad todavía. Dejaste de leer, dejaste de aprender, seguiste el camino automático. Eso te pesó. La incubadora te mostró que todavía no era tarde. Este año es el año en que empezás a ser coherente con lo que te prometiste a los 16.
+    </div>
+    <div class="roadmap rm5">
+      <div class="col c1">
+        <div class="col-head"><span class="col-num">1</span><span class="col-name">La promesa</span></div>
+        <span class="col-date">Mayo – Jun 2026</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Responder en papel: ¿estoy dispuesto a decepcionar la imagen vieja para construir la vida que quiero?</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Retomar la lectura: 1 libro/semana (lo que dejaste desde el colegio)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Rutina mínima no negociable: entreno + estudio + implementación</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Eliminar distracciones reactivas: cel, series, tiempo muerto</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Completar 100% Incubadora + Practigram</span></div>
+      </div>
+      <div class="col c1">
+        <div class="col-head"><span class="col-num">2</span><span class="col-name">La verdad</span></div>
+        <span class="col-date">Jul – Ago 2026</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Conversación honesta con tus viejos — con resultados en mano, no excusas</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Dejar de sostener la contradicción interna (mentir cansa más que actuar)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primer acto de audacia pública: contenido mostrando quién sos</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Hablar con 2 referentes o mentores reales</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primer evento de networking presencial en Córdoba</span></div>
+      </div>
+      <div class="col c1">
+        <div class="col-head"><span class="col-num">3</span><span class="col-name">El sistema</span></div>
+        <span class="col-date">Sep – Oct 2026</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Agenda semanal fija: cada hora tiene un nombre</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Revisión semanal personal (domingo, 30 minutos)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Cortar estímulos y círculos que te frenan activamente</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Construir entorno físico de alto rendimiento en el depto</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Aprender a regular energía y emociones sin escapar al cel</span></div>
+      </div>
+      <div class="col c1">
+        <div class="col-head"><span class="col-num">4</span><span class="col-name">La identidad</span></div>
+        <span class="col-date">Nov – Dic 2026</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Documentar el año: qué aprendiste, quién eras vs quién sos</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primer contenido de enseñanza publicado (tu propósito visible)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Dar una charla/taller informal a 5 personas conocidas</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Físico: llegar a 80 kg con entrenamiento constante</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Actualizar creencias con evidencia propia acumulada</span></div>
+      </div>
+      <div class="col c1">
+        <div class="col-head"><span class="col-num">5</span><span class="col-name">Consolidar</span></div>
+        <span class="col-date">Ene – May 2027</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Mentoría formal con alguien 5+ años adelante</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Red de 5+ emprendedores cercanos reales</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">6 meses de hábitos no negociables sostenidos</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">1% mejor/día en físico, mental, material, relaciones, emocional, contribución</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Sentirte en paz, con dirección, sin culpa ni contradicción interna</span></div>
+      </div>
+    </div>
+    <div class="dv"></div>
+    <div class="two">
+      <div class="mini-card">
+        <div class="mini-title">Creencias a reemplazar este año</div>
+        <div class="it"><span class="it-dot" style="background:var(--purple)"></span><span contenteditable="true">"Tengo que ser perfecto para actuar" → La acción imperfecta construye confianza</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--purple)"></span><span contenteditable="true">"Mi valor depende de cómo me ven" → Mi valor lo defino yo con mis acciones diarias</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--purple)"></span><span contenteditable="true">"Todavía no merezco mostrarme" → Mostrarme imperfecto ES el proceso</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--purple)"></span><span contenteditable="true">"Si cambio de camino, decepciono" → Decepcionar expectativas ajenas es parte de crecer</span></div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">Tiempo e inversión</div>
+        <div class="it"><span class="it-dot" style="background:var(--purple)"></span><span contenteditable="true">8h/día: 3h estudio + 5h implementación directa</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--purple)"></span><span contenteditable="true">400h comprometidas en Incubadora + Practigram</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--purple)"></span><span contenteditable="true">Inversión dinero: 0 en etapa 1, 300 USD en etapa 2 (del negocio)</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--purple)"></span><span contenteditable="true">Actividad más apalancada: conseguir 1 mentor real este año</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--purple)"></span><span contenteditable="true">Miedos a superar: exposición pública, venta, juicio familiar</span></div>
+      </div>
+    </div>
+    <div class="scn">
+      <div class="sn op"><div class="snt">↑ Optimista</div><p contenteditable="true">A julio mostrás resultados, tus viejos confían, seguís en Córdoba. A mayo 2027 sos coherente con tu promesa de los 16.</p></div>
+      <div class="sn re"><div class="snt">→ Realista</div><p contenteditable="true">La conversación con tus viejos es dura pero sale bien si hay resultados. Hay semanas malas. El año termina con una identidad distinta.</p></div>
+      <div class="sn pe"><div class="snt">↓ Pesimista</div><p contenteditable="true">Tus viejos cortan el soporte. Volvés a Jujuy temporalmente. El negocio online no requiere que estés en Córdoba. No abandonás el camino.</p></div>
+    </div>
+  </div>
+
+  <!-- ── PLAN 3: SER 5 AÑOS ── -->
+  <div id="p3" class="plan-sec">
+    <div class="plan-head">
+      <span class="plan-badge b2">Visión — De 19 a 24 años</span>
+      <div class="plan-title">Plan 2 — 5 años para VIVIR DE mi propósito</div>
+      <div class="plan-sub">Del laboratorio de stickers al negocio real alineado con tu propósito. De Córdoba al mundo.</div>
+    </div>
+    <div class="ctx-box" contenteditable="true">
+      <b>La lógica de estos 5 años:</b> A los 16 te prometiste que no ibas a ser mediocre. A los 19 dejaste la facultad para apostarte a vos mismo. A los 24 la apuesta se habrá pagado: vivís de enseñar, crear y ayudar, con libertad de tiempo, energía y decisiones. No sos empleado de nadie, ni siquiera de tu propio negocio.
+    </div>
+    <div class="roadmap rm5">
+      <div class="col c2">
+        <div class="col-head"><span class="col-num">Año 1</span><span class="col-name">Raíces</span></div>
+        <span class="col-date">2026 — 19-20 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Stickers rentable: 250-1000 USD/mes</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Incubadora + Practigram 100% aplicado</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Hábitos base instalados y sostenidos</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primer mentor real conseguido</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Verdad con tus viejos, con resultados en mano</span></div>
+      </div>
+      <div class="col c2">
+        <div class="col-head"><span class="col-num">Año 2</span><span class="col-name">Marca</span></div>
+        <span class="col-date">2027 — 20-21 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Marca personal activa en redes con contenido de valor</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primeros seguidores comprometidos (no solo conocidos)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primer taller/workshop pagado</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Oratoria y comunicación en desarrollo activo</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">800 USD/mes combinados</span></div>
+      </div>
+      <div class="col c2">
+        <div class="col-head"><span class="col-num">Año 3</span><span class="col-name">Comunidad</span></div>
+        <span class="col-date">2028 — 21-22 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Comunidad de crecimiento personal activa</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Método propio de enseñanza (con juegos/dinámicas)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Mentorías grupales lanzadas</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Red de 20+ emprendedores activos</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">1500 USD/mes propios</span></div>
+      </div>
+      <div class="col c2">
+        <div class="col-head"><span class="col-num">Año 4</span><span class="col-name">Escala</span></div>
+        <span class="col-date">2029 — 22-23 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Charlas pagadas en eventos de emprendimiento</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Curso/academia digital con alumnos reales</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Equipo mínimo: editor + asistente</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Presencia en Buenos Aires u otro país</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">3000 USD/mes</span></div>
+      </div>
+      <div class="col c2">
+        <div class="col-head"><span class="col-num">Año 5</span><span class="col-name">Propósito</span></div>
+        <span class="col-date">2030 — 23-24 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Libertad real: tiempo, energía, decisiones</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Vivís de enseñar, crear y ayudar</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Viaje a China con tu papá (lo prometiste)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Organización/fundación de crecimiento en proceso</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">5000+ USD/mes + patrimonio propio</span></div>
+      </div>
+    </div>
+    <div class="dv"></div>
+    <div class="two">
+      <div class="mini-card">
+        <div class="mini-title">Contactos estratégicos a desarrollar</div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">Mentores 5-10 años adelante en el mismo camino</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">Amigos de ingeniería (potenciales socios tecnológicos)</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">Creadores de contenido con audiencia afín en LATAM</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">Emprendedores de educación online y comunidades</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">Referentes de oratoria y comunicación en Argentina</span></div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">Actividades apalancadas (más con menos)</div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">1 idea de contenido → 5 formatos distintos</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">Mentorías grupales (escalar tu tiempo)</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">Infoproductos que se venden mientras dormís</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">Red que te recomienda (tu capital social)</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--teal)"></span><span contenteditable="true">Caso de éxito propio como herramienta de venta</span></div>
+      </div>
+    </div>
+    <div class="scn">
+      <div class="sn op"><div class="snt">↑ Optimista</div><p contenteditable="true">A los 24 tenés academia, comunidad activa, das charlas y vivís de tu propósito. Le pagás el viaje a China a tu papá.</p></div>
+      <div class="sn re"><div class="snt">→ Realista</div><p contenteditable="true">Los tiempos se corren 6-12 meses pero el camino es sólido. A los 24 no dependés de nadie y hacés lo que amás.</p></div>
+      <div class="sn pe"><div class="snt">↓ Pesimista</div><p contenteditable="true">Períodos difíciles, pivoteos necesarios. El propósito se sostiene aunque el vehículo cambie. Lo construido no se pierde.</p></div>
+    </div>
+  </div>
+
+  <!-- ── PLAN 4: NEGOCIO 1 AÑO ── -->
+  <div id="p4" class="plan-sec">
+    <div class="plan-head">
+      <span class="plan-badge b3">Meta crítica: 300 USD → 3 Jul 2026 → 1000 USD/mes</span>
+      <div class="plan-title">Plan 3 — Negocio 1 año (Stickers DTF/UV)</div>
+      <div class="plan-sub">El laboratorio donde aprendés a vender, crear funnels y sistematizar. Mayo 2026 → Mayo 2027.</div>
+    </div>
+    <div class="ctx-box" contenteditable="true">
+      <b>Situación real:</b> 2 ventas a desconocidos confirmadas (demanda validada). IG desprolijo. Sin funnel ni landing. Problema de costo/tiempo en armado de planchas sin resolver. Tu papá = proveedor con margen a favor. 5-8h/día disponibles. Necesitás 300 USD propios para poder invertir en ads + herramientas. Fecha crítica: 3 de julio 2026.
+    </div>
+    <div class="roadmap rm5">
+      <div class="col c3">
+        <div class="col-head"><span class="col-num">1</span><span class="col-name">Orden</span></div>
+        <span class="col-date">Mayo – 3 Jul 2026</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Catálogo claro: qué productos, qué precios, qué márgenes</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Resolver el problema de armado de planchas (tiempo/costo)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">IG ordenado: bio, destacadas, quién soy, qué vendo, cómo comprar</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Proceso simple de pedido: WhatsApp + forma de pago</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Regla fija: pago antes de producir, siempre</span></div>
+      </div>
+      <div class="col c3">
+        <div class="col-head"><span class="col-num">2</span><span class="col-name">Primeras ventas</span></div>
+        <span class="col-date">Jul – Ago 2026</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primera landing page testeada (con Claude)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primeros ads con los 300 USD generados</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Pack mayorista para negocios y revendedores</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Reinvertir 50% de cada venta en escalar</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Meta: 250 USD/mes estables</span></div>
+      </div>
+      <div class="col c3">
+        <div class="col-head"><span class="col-num">3</span><span class="col-name">Marca</span></div>
+        <span class="col-date">Sep – Oct 2026</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Contenido constante: proceso real, resultados, testimonios</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Reels/TikTok mostrando el producto en uso real</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Identidad visual coherente y simple</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">5 clientes recurrentes captados</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Meta: 500 USD/mes</span></div>
+      </div>
+      <div class="col c3">
+        <div class="col-head"><span class="col-num">4</span><span class="col-name">Sistema</span></div>
+        <span class="col-date">Nov – Dic 2026</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Base de clientes organizada (CRM simple)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Automatizar seguimiento de pedidos</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Delegar armado de planchas o estandarizar proceso</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Testear múltiples landing pages por rentabilidad</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Meta: 500-800 USD/mes</span></div>
+      </div>
+      <div class="col c3">
+        <div class="col-head"><span class="col-num">5</span><span class="col-name">Decisión</span></div>
+        <span class="col-date">Ene – May 2027</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Negocio sostenible documentado como caso de éxito</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Activos digitales creados: funnels, landings probadas</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Decisión clave: escalar stickers o pivotear a propósito mayor</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Aprendizajes de ventas, contenido y funnels transferidos</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Meta: 1000 USD/mes o caso exitoso documentado</span></div>
+      </div>
+    </div>
+    <div class="dv"></div>
+    <div class="two">
+      <div class="mini-card">
+        <div class="mini-title">Miedos y decisiones clave</div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Miedo a mostrar producto imperfecto → publicar igual, siempre</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Miedo a vender → recordar que vender es servir</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Decisión crítica: hablar con tus viejos antes del 3 de julio</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Decisión técnica: resolver planchas antes de escalar</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Decisión de inversión: 300 USD en ads apenas estén disponibles</span></div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">Actividades apalancadas</div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Landings testeadas: 1 ad bien hecho → muchas ventas</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Diseños predefinidos: vender sin armar desde cero</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Clientes mayoristas: 1 venta grande = N ventas chicas</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Contenido orgánico: 1 reel bien hecho → tráfico gratis sostenido</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--coral)"></span><span contenteditable="true">Tu papá como proveedor: margen sin competencia posible</span></div>
+      </div>
+    </div>
+    <div class="scn">
+      <div class="sn op"><div class="snt">↑ Optimista</div><p contenteditable="true">A julio tenés 250+ USD/mes, mostrás resultados reales, tus viejos te bancan. El negocio crece solo hacia fin de año.</p></div>
+      <div class="sn re"><div class="snt">→ Realista</div><p contenteditable="true">A julio tenés ventas pero no 250 USD/mes todavía. Mostrás el proceso honestamente. Tus viejos te dan tiempo hasta diciembre.</p></div>
+      <div class="sn pe"><div class="snt">↓ Pesimista</div><p contenteditable="true">No llegás a julio con resultados. Volvés a Jujuy. El negocio online sigue desde allá. No era el fin, era un cambio de base.</p></div>
+    </div>
+  </div>
+
+  <!-- ── PLAN 5: NEGOCIO 5 AÑOS ── -->
+  <div id="p5" class="plan-sec">
+    <div class="plan-head">
+      <span class="plan-badge b4">Visión empresarial — 5 años</span>
+      <div class="plan-title">Plan 4 — Negocio 5 años (Del laboratorio al propósito)</div>
+      <div class="plan-sub">Los stickers son el primer capítulo. El propósito es el libro entero.</div>
+    </div>
+    <div class="ctx-box" contenteditable="true">
+      <b>La lógica real:</b> No saliste de la facultad para vender stickers el resto de tu vida. Saliste para aprender a emprender, a vender, a sistematizar y a crear casos de éxito. Con ese capital de experiencia y credibilidad construís el negocio que de verdad te mueve: enseñar, crear y ayudar a personas que no se resignaron a su vida a desbloquear su potencial.
+    </div>
+    <div class="roadmap rm5">
+      <div class="col c4">
+        <div class="col-head"><span class="col-num">Año 1</span><span class="col-name">Laboratorio</span></div>
+        <span class="col-date">2026 — 19 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Stickers: 250-1000 USD/mes escalando</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Aprender ventas, funnels, contenido, ads, IA</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Documentar todo: caso de éxito en construcción</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Marca personal embrionaria en redes</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Resolver la mentira con tus viejos antes de que explote</span></div>
+      </div>
+      <div class="col c4">
+        <div class="col-head"><span class="col-num">Año 2</span><span class="col-name">Marca personal</span></div>
+        <span class="col-date">2027 — 20-21 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Contenido sobre emprendimiento + crecimiento personal</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primeros talleres o workshops pagados</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Primer infoproducto (guía, mini-curso)</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Comunidad online en construcción activa</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">1500 USD/mes combinados</span></div>
+      </div>
+      <div class="col c4">
+        <div class="col-head"><span class="col-num">Año 3</span><span class="col-name">Academia</span></div>
+        <span class="col-date">2028 — 21-22 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Método propio de enseñanza con juegos y dinámicas</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Programa de mentoría grupal lanzado</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">10+ alumnos activos pagando</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">YouTube o podcast con contenido de valor real</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">3000 USD/mes</span></div>
+      </div>
+      <div class="col c4">
+        <div class="col-head"><span class="col-num">Año 4</span><span class="col-name">Conferencias</span></div>
+        <span class="col-date">2029 — 22-23 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Charlas pagadas en eventos de emprendimiento</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Presencia en Buenos Aires, Chile o exterior</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Equipo: editor de contenido + asistente</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Asociaciones estratégicas con referentes LATAM</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">5000 USD/mes + activos digitales</span></div>
+      </div>
+      <div class="col c4">
+        <div class="col-head"><span class="col-num">Año 5</span><span class="col-name">Legacy</span></div>
+        <span class="col-date">2030 — 23-24 años</span>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Organización de crecimiento personal lanzada</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">10.000+ personas impactadas</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Libertad financiera real: flujo + patrimonio</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">Casa propia, viajes, experiencias con familia</span></div>
+        <div class="it"><span class="it-dot"></span><span contenteditable="true">El legado que te prometiste a los 16 — cumplido</span></div>
+      </div>
+    </div>
+    <div class="dv"></div>
+    <div class="two">
+      <div class="mini-card">
+        <div class="mini-title">Aprendizajes necesarios por año</div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Año 1: ventas, funnels, contenido, ads, IA, sistemas</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Año 2: oratoria, copywriting, comunicación persuasiva</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Año 3: diseño de cursos, facilitación, pedagogía aplicada</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Año 4: liderazgo, management, construcción de equipo</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Año 5: inversión, patrimonio, estructuras legales, fundaciones</span></div>
+      </div>
+      <div class="mini-card">
+        <div class="mini-title">Decisiones que definen el camino</div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Hablar con tus viejos antes del 3 de julio (con resultados)</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Cuándo pivotear de stickers a propósito mayor</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Cuándo y cómo lanzar el primer infoproducto</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Cuándo contratar el primer equipo</span></div>
+        <div class="it"><span class="it-dot" style="background:var(--amber)"></span><span contenteditable="true">Dónde vivir para maximizar oportunidades (Cba, BsAs, exterior)</span></div>
+      </div>
+    </div>
+    <div class="scn">
+      <div class="sn op"><div class="snt">↑ Optimista</div><p contenteditable="true">A los 24 sos referente en LATAM en crecimiento para emprendedores jóvenes. Tenés academia, conferencias y patrimonio. Le pagás el viaje a China a tu papá.</p></div>
+      <div class="sn re"><div class="snt">→ Realista</div><p contenteditable="true">A los 24 vivís de tu propósito con libertad real. No sos famoso todavía, pero sos libre. Y eso vale todo el esfuerzo de estos años.</p></div>
+      <div class="sn pe"><div class="snt">↓ Pesimista</div><p contenteditable="true">Los tiempos se corrieron. Pero a los 24 tenés 5 años de experiencia real que ninguna facultad podría haberte dado. Y eso es irreversible.</p></div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+function go(id, idx) {
+  document.querySelectorAll('.plan-sec').forEach(s => s.classList.remove('on'));
+  document.querySelectorAll('.tab-btn').forEach(t => t.classList.remove('on'));
+  document.getElementById(id).classList.add('on');
+  document.querySelectorAll('.tab-btn')[idx].classList.add('on');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copiar() {
+  const txt = document.getElementById('cptxt').innerText;
+  navigator.clipboard.writeText(txt).then(() => {
+    const btn = document.querySelector('.copy-btn');
+    btn.innerHTML = `<svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg> Copiado`;
+    setTimeout(() => {
+      btn.innerHTML = `<svg viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg> Copiar síntesis`;
+    }, 2200);
+  });
+}
+</script>
+</body>
+</html>
